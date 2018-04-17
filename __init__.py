@@ -1,10 +1,17 @@
-from flask import Flask
+from flask import Flask, render_template, request
+from flaskext.mysql import MySQL
 
+
+mysql = MySQL()
 app = Flask(__name__)
 
-@app.route("/")
-def main(): 
-	return "heroku deployed haha jiabai zzz!"
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_DB'] = 'EmpData'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+
+
+mysql.init_app(app)
 
 @app.route('/')
 
@@ -27,4 +34,6 @@ def Authenticate():
 
 if __name__ == '__main__':
 	app.run()
+
+
 
