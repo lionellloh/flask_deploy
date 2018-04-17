@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 
-def main: 
+def main(): 
 	return "heroku deployed!"
 
 if __name__ == "__main__": 
