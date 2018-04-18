@@ -18,6 +18,46 @@ class User(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.name
 
+def create_item(score, mass, category, deposited_by, created_at=None,
+                extra_info=None):
+    """
+    Create a new deposited item.
+    :param created_at: Datetime of creation (if not specified just defaults to
+    server time)
+    :param score: Score int
+    :param mass: Mass int
+    :param category: Category int
+    :param deposited_by: User ID of depositing user
+    :param extra_info: Extra info in JSON format
+    :return: Id of new item or False if create failed
+    """
+    # Only one None of type NoneType - same effect as ... is None
+    if not isinstance(extra_info, (str, type(None))):
+        raise ValueError('extra_info isn\'t a str or None')
+
+    params = {
+        'score': int(score),
+        'mass': int(mass),
+        'category': int(category),
+        'deposited_by': int(deposited_by),
+        'created_at': created_at or datetime.now(),
+        'extra_info': extra_info
+    }
+
+    with records.Database(DATABASE_URL) as db:
+        try:
+            db.query('''
+                INSERT INTO Items (score, mass, category, deposited_by,
+                  created_at, extra_info)
+                VALUES (:score,:mass,:category,:deposited_by,:created_at,
+                  :extra_info);
+            ''', **params)
+
+            return db.query('SELECT last_insert_id() AS id;').first()['id']
+        except IntegrityError as e:
+            print('IntegrityError! {}'.format(repr(e)))
+            return False
+
 # from flask import Flask, render_template, request
 # from flask.ext.sqlalchemy import SQLAlchemy
 #
