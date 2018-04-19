@@ -1,0 +1,1 @@
+Add your templates here. Templates are HTML files interspersed with {{template tags}} that instruct Flask (actually Jinja2) on how to convert python data into html.
